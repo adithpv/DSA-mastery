@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>07 · Max Consecutive Ones — Visual Lesson</title>
+    <link rel="stylesheet" href="../assets/lesson.css">
+    <script src="../assets/lesson.js" defer></script>
+</head>
+<body>
+    <nav class="topbar"><a href="../course/arrays/07-max-consecutive-ones/prompt.md">← Problem 07</a><span>Arrays · Visual lesson</span><a href="README.md">All lessons</a></nav>
+    <main>
+        <header class="hero"><p class="eyebrow">Pattern · Running streak</p><h1>Max Consecutive Ones</h1><p class="lede">A one extends the streak ending here. A zero breaks it. Keep the current run separate from the best run ever seen.</p></header>
+        <div class="signal"><div class="signal-icon">💡</div><div><strong>Recognition signal</strong><br>The word “consecutive” means continuity matters. Track a current streak that resets when the condition fails.</div></div>
+
+        <section class="grid">
+            <article class="card"><h2>The picture</h2><div class="array"><span class="cell keep">1</span><span class="cell keep">1</span><span class="cell zero">0</span><span class="cell done">1</span><span class="cell done">1</span><span class="cell done">1</span></div><div class="pointer-row"><span class="pointer">first streak = 2</span><span class="pointer">second streak = 3</span><span class="pointer">answer = 3</span></div></article>
+            <article class="card"><h2>State jobs</h2><ul class="state-list"><li><code>count</code> is the streak ending at the current position.</li><li><code>maxCount</code> is the best streak found anywhere so far.</li><li>A zero resets only <code>count</code>, never the saved best.</li></ul></article>
+        </section>
+
+        <section class="trace" data-trace>
+            <h2>Walk it: [1, 1, 0, 1, 1, 1]</h2>
+            <article class="trace-step"><h3>First one starts a streak</h3><div class="array"><span class="cell read">1</span><span class="cell">1</span><span class="cell zero">0</span><span class="cell">1</span><span class="cell">1</span><span class="cell">1</span></div><p><code>count = 1</code>. The current streak ends exactly here.</p></article>
+            <article class="trace-step"><h3>Second one extends it</h3><div class="array"><span class="cell keep">1</span><span class="cell read">1</span><span class="cell zero">0</span><span class="cell">1</span><span class="cell">1</span><span class="cell">1</span></div><p><code>count = 2</code>. Save 2 as the best completed length so far.</p></article>
+            <article class="trace-step"><h3>Zero breaks continuity</h3><div class="array"><span class="cell done">1</span><span class="cell done">1</span><span class="cell zero">0</span><span class="cell">1</span><span class="cell">1</span><span class="cell">1</span></div><p>Reset <code>count = 0</code>, but keep <code>maxCount = 2</code>.</p></article>
+            <article class="trace-step"><h3>Final streak reaches the end</h3><div class="array"><span class="cell done">1</span><span class="cell done">1</span><span class="cell zero">0</span><span class="cell keep">1</span><span class="cell keep">1</span><span class="cell keep">1</span></div><p><code>count = 3</code>. The final return must compare it with the saved maximum.</p></article>
+            <div class="trace-controls"><button data-previous>Previous</button><strong data-counter></strong><button data-next>Next</button></div>
+        </section>
+
+        <section class="grid">
+            <article class="card"><h2>The invariant</h2><p class="invariant">After each value, <code>count</code> is the length of the all-ones streak ending there, and <code>max(maxCount, count)</code> is the longest streak in the scanned prefix.</p><p>The ending-at-current meaning tells you exactly when to increment and reset.</p></article>
+            <article class="card"><h2>The algorithm</h2><pre><code>let count = 0;
+let maxCount = 0;
+
+for (const value of nums) {
+    if (value === 1) {
+        count++;
+    } else {
+        maxCount = Math.max(maxCount, count);
+        count = 0;
+    }
+}
+return Math.max(count, maxCount);</code></pre></article>
+        </section>
+
+        <section class="card"><h2>What to remember</h2><p class="warning"><strong>The end-of-array trap:</strong> if the longest streak reaches the last value, no zero arrives to save it. Compare <code>count</code> again when returning.</p><div class="complexity"><div class="metric"><b>O(n) time</b>One update per bit.</div><div class="metric"><b>O(1) space</b>Two counters only.</div></div><p>Primary source: <a href="https://leetcode.com/problems/max-consecutive-ones/">LeetCode 485</a>. Pattern reference: <a href="../patterns/running-streak.md">Running streak</a>.</p></section>
+        <section class="recall"><h2>Check your memory</h2><details><summary>Why does zero reset count?</summary><p>A streak ending before the zero cannot continue through it, so a later one begins a new streak.</p></details><details><summary>Why not count all the ones?</summary><p>The question asks for adjacent ones; total count ignores the zeroes that divide separate runs.</p></details><p>Ask the agent to adapt this pattern to “longest run of positive numbers.”</p></section>
+        <nav class="lesson-nav"><a href="0006-move-zeroes.html">← Move Zeroes</a><a href="README.md">Finish: Lesson index →</a></nav>
+    </main>
+</body>
+</html>

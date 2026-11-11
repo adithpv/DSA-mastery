@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>05 · Merge Sorted Array — Visual Lesson</title>
+    <link rel="stylesheet" href="../assets/lesson.css">
+    <script src="../assets/lesson.js" defer></script>
+</head>
+<body>
+    <nav class="topbar"><a href="../course/arrays/05-merge-sorted-array/prompt.md">← Problem 05</a><span>Arrays · Visual lesson</span><a href="README.md">All lessons</a></nav>
+    <main>
+        <header class="hero"><p class="eyebrow">Pattern · Backward merge</p><h1>Merge Sorted Array</h1><p class="lede">The free space is at the end, so fill it with the largest remaining values. Working backward protects unread data.</p></header>
+        <div class="signal"><div class="signal-icon">💡</div><div><strong>Recognition signal</strong><br>When two arrays are sorted and the first has empty slots at its end, think: compare from the right and write from the right.</div></div>
+
+        <section class="grid">
+            <article class="card"><h2>The three pointers</h2><div class="array"><span class="cell">1</span><span class="cell">2</span><span class="cell read">3</span><span class="cell empty">_</span><span class="cell empty">_</span><span class="cell write">_</span></div><div class="array"><span class="cell">2</span><span class="cell">5</span><span class="cell keep">6</span></div><div class="pointer-row"><span class="pointer">p1 = 3</span><span class="pointer">p2 = 6</span><span class="pointer">write = last slot</span></div></article>
+            <article class="card"><h2>Pointer jobs</h2><ul class="state-list"><li><code>p1</code> points to the largest unused real value in <code>nums1</code>.</li><li><code>p2</code> points to the largest unused value in <code>nums2</code>.</li><li><code>i</code> points to the empty destination for the larger one.</li></ul></article>
+        </section>
+
+        <section class="trace" data-trace>
+            <h2>Walk it: [1,2,3,_,_,_] + [2,5,6]</h2>
+            <article class="trace-step"><h3>Compare 3 and 6</h3><div class="array"><span class="cell">1</span><span class="cell">2</span><span class="cell read">3</span><span class="cell empty">_</span><span class="cell empty">_</span><span class="cell write">6</span></div><p>6 is larger, so it owns the last position. Move <code>p2</code> and <code>i</code> left.</p></article>
+            <article class="trace-step"><h3>Compare 3 and 5</h3><div class="array"><span class="cell">1</span><span class="cell">2</span><span class="cell read">3</span><span class="cell empty">_</span><span class="cell write">5</span><span class="cell done">6</span></div><p>5 is the next-largest remaining value.</p></article>
+            <article class="trace-step"><h3>Compare 3 and 2</h3><div class="array"><span class="cell">1</span><span class="cell">2</span><span class="cell read">3</span><span class="cell write">3</span><span class="cell done">5</span><span class="cell done">6</span></div><p>Now 3 wins. Move <code>p1</code> left.</p></article>
+            <article class="trace-step"><h3>Place the remaining 2 from nums2</h3><div class="array"><span class="cell done">1</span><span class="cell done">2</span><span class="cell done">2</span><span class="cell done">3</span><span class="cell done">5</span><span class="cell done">6</span></div><p>When <code>nums2</code> is exhausted, leftover <code>nums1</code> values are already in place.</p></article>
+            <div class="trace-controls"><button data-previous>Previous</button><strong data-counter></strong><button data-next>Next</button></div>
+        </section>
+
+        <section class="grid">
+            <article class="card"><h2>The invariant</h2><p class="invariant">Before every write, all positions to the right of <code>i</code> contain the correct largest values in final sorted order.</p><p>The largest remaining candidate always belongs at the current rightmost empty position.</p></article>
+            <article class="card"><h2>The algorithm</h2><pre><code>let p1 = m - 1;
+let p2 = n - 1;
+
+for (let i = m + n - 1; i &gt;= 0; i--) {
+    if (p2 &lt; 0) break;
+    if (p1 &gt;= 0 &amp;&amp; nums1[p1] &gt; nums2[p2]) {
+        nums1[i] = nums1[p1--];
+    } else {
+        nums1[i] = nums2[p2--];
+    }
+}</code></pre></article>
+        </section>
+
+        <section class="card"><h2>What to remember</h2><p class="warning"><strong>Direction is the trick.</strong> Starting at the front can overwrite a real <code>nums1</code> value before it is compared. Empty space at the end is your safety zone.</p><div class="complexity"><div class="metric"><b>O(m + n) time</b>Every value moves at most once.</div><div class="metric"><b>O(1) space</b>The result uses nums1's capacity.</div></div><p>Primary source: <a href="https://leetcode.com/problems/merge-sorted-array/">LeetCode 88</a>. Pattern reference: <a href="../patterns/backward-merge.md">Backward merge</a>.</p></section>
+        <section class="recall"><h2>Check your memory</h2><details><summary>Why can we stop when nums2 is empty?</summary><p>Any unused nums1 values already occupy the correct front positions.</p></details><details><summary>What is final after every iteration?</summary><p>The suffix to the right of the write pointer is final and sorted.</p></details><p>Ask the agent to trace the hard case <code>[4,5,6,_,_,_] + [1,2,3]</code>.</p></section>
+        <nav class="lesson-nav"><a href="0004-best-time-to-buy-stock.html">← Stock Profit</a><a href="0006-move-zeroes.html">Next: Move Zeroes →</a></nav>
+    </main>
+</body>
+</html>

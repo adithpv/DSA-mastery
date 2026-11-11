@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>03 · Reverse String — Visual Lesson</title>
+    <link rel="stylesheet" href="../assets/lesson.css">
+    <script src="../assets/lesson.js" defer></script>
+</head>
+<body>
+    <nav class="topbar"><a href="../course/arrays/03-reverse-string/prompt.md">← Problem 03</a><span>Arrays · Visual lesson</span><a href="README.md">All lessons</a></nav>
+    <main>
+        <header class="hero"><p class="eyebrow">Pattern · Converging two pointers</p><h1>Reverse String</h1><p class="lede">The first belongs where the last is. Swap symmetric pairs, then shrink the unfinished middle.</p></header>
+        <div class="signal"><div class="signal-icon">💡</div><div><strong>Recognition signal</strong><br>When a task is symmetric across both ends—reverse, compare, pair—think: left and right pointers moving inward.</div></div>
+
+        <section class="grid">
+            <article class="card"><h2>The picture</h2><div class="array"><span class="cell read">a</span><span class="cell">d</span><span class="cell">i</span><span class="cell">t</span><span class="cell write">h</span></div><div class="pointer-row"><span class="pointer">left = 0 →</span><span class="pointer">← right = 4</span></div><p>Swap the outside pair. After that, those two positions are finished forever.</p></article>
+            <article class="card"><h2>Pointer jobs</h2><ul class="state-list"><li><code>left</code> marks the first unfinished position.</li><li><code>right</code> marks the last unfinished position.</li><li>Each swap fixes two final positions.</li></ul></article>
+        </section>
+
+        <section class="trace" data-trace>
+            <h2>Walk it: [a, d, i, t, h]</h2>
+            <article class="trace-step"><h3>Swap the outside pair</h3><div class="array"><span class="cell read">a</span><span class="cell">d</span><span class="cell">i</span><span class="cell">t</span><span class="cell write">h</span></div><p>Save <code>a</code>, put <code>h</code> on the left, then put the saved <code>a</code> on the right.</p></article>
+            <article class="trace-step"><h3>The outside is final</h3><div class="array"><span class="cell done">h</span><span class="cell read">d</span><span class="cell">i</span><span class="cell write">t</span><span class="cell done">a</span></div><p>Move inward. Only the interval from index 1 to 3 remains unfinished.</p></article>
+            <article class="trace-step"><h3>Swap the next pair</h3><div class="array"><span class="cell done">h</span><span class="cell done">t</span><span class="cell read">i</span><span class="cell done">d</span><span class="cell done">a</span></div><p>The middle character has no partner and stays where it is.</p></article>
+            <article class="trace-step"><h3>Pointers meet → finished</h3><div class="array"><span class="cell done">h</span><span class="cell done">t</span><span class="cell done">i</span><span class="cell done">d</span><span class="cell done">a</span></div><p>Once left is no longer less than right, every pair has been handled.</p></article>
+            <div class="trace-controls"><button data-previous>Previous</button><strong data-counter></strong><button data-next>Next</button></div>
+        </section>
+
+        <section class="grid">
+            <article class="card"><h2>The invariant</h2><p class="invariant">Before every swap, everything outside <code>[left, right]</code> is already in its final reversed position. Only the inside interval remains.</p><p>This makes stopping at the middle safe.</p></article>
+            <article class="card"><h2>The algorithm</h2><pre><code>let left = 0;
+let right = s.length - 1;
+
+while (left &lt; right) {
+    let temp = s[left];
+    s[left] = s[right];
+    s[right] = temp;
+    left++;
+    right--;
+}</code></pre></article>
+        </section>
+
+        <section class="card"><h2>What to remember</h2><p class="warning"><strong>Save before overwriting.</strong> Without a temporary variable, the original left character is lost before it can move right.</p><div class="complexity"><div class="metric"><b>O(n) time</b>About half of n swaps.</div><div class="metric"><b>O(1) space</b>Only pointers and one temporary value.</div></div><p>Primary source: <a href="https://leetcode.com/problems/reverse-string/">LeetCode 344</a>. Pattern reference: <a href="../patterns/converging-two-pointers.md">Converging two pointers</a>.</p></section>
+        <section class="recall"><h2>Check your memory</h2><details><summary>Why use left &lt; right?</summary><p>When pointers meet, the middle value is already correct. After they cross, every pair has been swapped.</p></details><details><summary>How many swaps for length 6?</summary><p>Three swaps: positions 0↔5, 1↔4, and 2↔3.</p></details><p>Ask the agent to draw pointer movement for an even-length example if needed.</p></section>
+        <nav class="lesson-nav"><a href="0002-remove-element.html">← Remove Element</a><a href="0004-best-time-to-buy-stock.html">Next: Stock Profit →</a></nav>
+    </main>
+</body>
+</html>

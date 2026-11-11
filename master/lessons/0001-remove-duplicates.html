@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>01 · Remove Duplicates — Visual Lesson</title>
+    <link rel="stylesheet" href="../assets/lesson.css">
+    <script src="../assets/lesson.js" defer></script>
+</head>
+<body>
+    <nav class="topbar"><a href="../course/arrays/01-remove-duplicates/prompt.md">← Problem 01</a><span>Arrays · Visual lesson</span><a href="README.md">All lessons</a></nav>
+    <main>
+        <header class="hero">
+            <p class="eyebrow">Pattern · Read/write pointers on sorted input</p>
+            <h1>Remove Duplicates</h1>
+            <p class="lede">One pointer discovers values. One pointer protects the unique prefix. Sorted order makes the decision local.</p>
+        </header>
+
+        <div class="signal"><div class="signal-icon">💡</div><div><strong>Recognition signal</strong><br>When you see “sorted,” “in-place,” and “return the number of unique values,” think: keep a compact unique prefix.</div></div>
+
+        <section class="grid">
+            <article class="card">
+                <h2>The picture</h2>
+                <p>The left side becomes the answer. The right side is still being inspected.</p>
+                <div class="array"><span class="cell keep">0</span><span class="cell keep">1</span><span class="cell write">2</span><span class="cell read">2</span><span class="cell">3</span><span class="cell">3</span><span class="cell">4</span></div>
+                <div class="pointer-row"><span class="pointer">x = last unique</span><span class="pointer">i = scanner</span></div>
+            </article>
+            <article class="card">
+                <h2>Pointer jobs</h2>
+                <ul class="state-list">
+                    <li><code>i</code> reads every candidate from left to right.</li>
+                    <li><code>x</code> points to the last unique value already kept.</li>
+                    <li><code>nums[0...x]</code> is the finished unique prefix.</li>
+                </ul>
+            </article>
+        </section>
+
+        <section class="trace" data-trace>
+            <h2>Walk it: [0, 0, 1, 1, 2]</h2>
+            <article class="trace-step">
+                <h3>Start with the first value kept</h3>
+                <div class="array"><span class="cell write">0</span><span class="cell read">0</span><span class="cell">1</span><span class="cell">1</span><span class="cell">2</span></div>
+                <p><code>x = 0</code>, <code>i = 1</code>. Compare the scanner with the last unique value.</p>
+            </article>
+            <article class="trace-step">
+                <h3>Same value → skip</h3>
+                <div class="array"><span class="cell keep">0</span><span class="cell drop">0</span><span class="cell read">1</span><span class="cell">1</span><span class="cell">2</span></div>
+                <p>The duplicate adds nothing. <code>x</code> stays at 0; only <code>i</code> moves.</p>
+            </article>
+            <article class="trace-step">
+                <h3>Different value → extend the prefix</h3>
+                <div class="array"><span class="cell keep">0</span><span class="cell write">1</span><span class="cell read">1</span><span class="cell">1</span><span class="cell">2</span></div>
+                <p>Move <code>x</code> to 1 and copy the new unique value there.</p>
+            </article>
+            <article class="trace-step">
+                <h3>Finish with three unique values</h3>
+                <div class="array"><span class="cell done">0</span><span class="cell done">1</span><span class="cell done">2</span><span class="cell empty">_</span><span class="cell empty">_</span></div>
+                <p>The last unique index is 2, so the count is <code>x + 1 = 3</code>.</p>
+            </article>
+            <div class="trace-controls"><button data-previous>Previous</button><strong data-counter></strong><button data-next>Next</button></div>
+        </section>
+
+        <section class="grid">
+            <article class="card">
+                <h2>The invariant</h2>
+                <p class="invariant">Before every comparison, <code>nums[0...x]</code> contains every unique value seen so far, exactly once and in sorted order.</p>
+                <p>This is the reason the algorithm works—not just a description of the code.</p>
+            </article>
+            <article class="card">
+                <h2>The algorithm</h2>
+                <pre><code>if (nums.length === 0) return 0;
+let x = 0;
+
+for (let i = 1; i &lt; nums.length; i++) {
+    if (nums[i] !== nums[x]) {
+        x++;
+        nums[x] = nums[i];
+    }
+}
+return x + 1;</code></pre>
+            </article>
+        </section>
+
+        <section class="card">
+            <h2>What to remember</h2>
+            <p class="warning"><strong>Index vs count:</strong> <code>x</code> is the last valid index, so the count is <code>x + 1</code>. This is the easiest mistake in this problem.</p>
+            <div class="complexity"><div class="metric"><b>O(n) time</b>Each value is scanned once.</div><div class="metric"><b>O(1) space</b>The same array stores the result.</div></div>
+            <p>Primary source: <a href="https://leetcode.com/problems/remove-duplicates-from-sorted-array/">LeetCode 26</a>. Pattern reference: <a href="../patterns/read-write-pointers.md">Read/write pointers</a>.</p>
+        </section>
+
+        <section class="recall">
+            <h2>Check your memory</h2>
+            <details><summary>Why is sorted order important?</summary><p>Duplicates are adjacent, so comparing with the last unique value is enough to detect a new one.</p></details>
+            <details><summary>Why return x + 1?</summary><p><code>x</code> is an index starting at zero. A last index of 2 means there are three values.</p></details>
+            <p>Ask the agent to trace a different input if any movement feels unclear.</p>
+        </section>
+        <nav class="lesson-nav"><a href="README.md">← Lesson index</a><a href="0002-remove-element.html">Next: Remove Element →</a></nav>
+    </main>
+</body>
+</html>

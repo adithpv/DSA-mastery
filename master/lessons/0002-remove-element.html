@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>02 · Remove Element — Visual Lesson</title>
+    <link rel="stylesheet" href="../assets/lesson.css">
+    <script src="../assets/lesson.js" defer></script>
+</head>
+<body>
+    <nav class="topbar"><a href="../course/arrays/02-remove-element/prompt.md">← Problem 02</a><span>Arrays · Visual lesson</span><a href="README.md">All lessons</a></nav>
+    <main>
+        <header class="hero"><p class="eyebrow">Pattern · Stable compaction</p><h1>Remove Element</h1><p class="lede">Read everything. Write only what survives. The write pointer is the size of your answer so far.</p></header>
+        <div class="signal"><div class="signal-icon">💡</div><div><strong>Recognition signal</strong><br>When selected values must be removed in-place and the first <code>k</code> positions matter, think: filter into the front of the same array.</div></div>
+
+        <section class="grid">
+            <article class="card"><h2>The picture</h2><p>Green is the valid prefix. Blue is being read. Red is discarded.</p><div class="array"><span class="cell keep">0</span><span class="cell keep">1</span><span class="cell drop">3</span><span class="cell read">2</span><span class="cell">3</span><span class="cell">4</span></div><div class="pointer-row"><span class="pointer">x = next write slot</span><span class="pointer">i = current read</span></div></article>
+            <article class="card"><h2>Pointer jobs</h2><ul class="state-list"><li><code>i</code> examines every original value.</li><li><code>x</code> points to the next free output position.</li><li>Write and increment only when the value should stay.</li></ul></article>
+        </section>
+
+        <section class="trace" data-trace>
+            <h2>Walk it: [3, 2, 2, 3], val = 3</h2>
+            <article class="trace-step"><h3>First value is removed</h3><div class="array"><span class="cell drop">3</span><span class="cell">2</span><span class="cell">2</span><span class="cell">3</span></div><p><code>x = 0</code>. Since 3 equals <code>val</code>, write nothing.</p></article>
+            <article class="trace-step"><h3>Keep the first 2</h3><div class="array"><span class="cell write">2</span><span class="cell read">2</span><span class="cell">2</span><span class="cell">3</span></div><p>Write 2 at index 0, then increment <code>x</code> to 1.</p></article>
+            <article class="trace-step"><h3>Keep the second 2</h3><div class="array"><span class="cell keep">2</span><span class="cell write">2</span><span class="cell read">2</span><span class="cell">3</span></div><p>The valid prefix is now <code>[2, 2]</code>, and <code>x = 2</code>.</p></article>
+            <article class="trace-step"><h3>Skip the final 3</h3><div class="array"><span class="cell done">2</span><span class="cell done">2</span><span class="cell empty">_</span><span class="cell drop">3</span></div><p>Return <code>x = 2</code>. Values after the first two positions do not matter.</p></article>
+            <div class="trace-controls"><button data-previous>Previous</button><strong data-counter></strong><button data-next>Next</button></div>
+        </section>
+
+        <section class="grid">
+            <article class="card"><h2>The invariant</h2><p class="invariant">Before each read, <code>nums[0...x-1]</code> contains exactly the accepted values seen so far, in their original order.</p><p>Skipping leaves the prefix correct. Writing one accepted value extends it correctly.</p></article>
+            <article class="card"><h2>The algorithm</h2><pre><code>let x = 0;
+
+for (let i = 0; i &lt; nums.length; i++) {
+    if (nums[i] !== val) {
+        nums[x] = nums[i];
+        x++;
+    }
+}
+return x;</code></pre></article>
+        </section>
+
+        <section class="card"><h2>What to remember</h2><p class="warning"><strong>Here x is already a count.</strong> It is the next empty position and increases once per kept value. Do not add one.</p><div class="complexity"><div class="metric"><b>O(n) time</b>One decision per value.</div><div class="metric"><b>O(1) space</b>Writes happen in the input.</div></div><p>Primary source: <a href="https://leetcode.com/problems/remove-element/">LeetCode 27</a>. Pattern reference: <a href="../patterns/read-write-pointers.md">Read/write pointers</a>.</p></section>
+        <section class="recall"><h2>Check your memory</h2><details><summary>What does x mean?</summary><p>It is the next write position and the number of accepted values already written.</p></details><details><summary>Why can writing forward not destroy unread data?</summary><p>The write pointer never moves ahead of the read pointer, so it writes only into positions already read or the current position.</p></details><p>Ask the agent for one hint at a time if you cannot rebuild the code from the invariant.</p></section>
+        <nav class="lesson-nav"><a href="0001-remove-duplicates.html">← Remove Duplicates</a><a href="0003-reverse-string.html">Next: Reverse String →</a></nav>
+    </main>
+</body>
+</html>

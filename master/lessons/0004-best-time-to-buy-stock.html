@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>04 · Best Time to Buy Stock — Visual Lesson</title>
+    <link rel="stylesheet" href="../assets/lesson.css">
+    <script src="../assets/lesson.js" defer></script>
+</head>
+<body>
+    <nav class="topbar"><a href="../course/arrays/04-best-time-to-buy-stock/prompt.md">← Problem 04</a><span>Arrays · Visual lesson</span><a href="README.md">All lessons</a></nav>
+    <main>
+        <header class="hero"><p class="eyebrow">Pattern · Running prefix state</p><h1>Best Time to Buy Stock</h1><p class="lede">Treat today as the selling day. You only need one fact about the past: the cheapest eligible buy price.</p></header>
+        <div class="signal"><div class="signal-icon">💡</div><div><strong>Recognition signal</strong><br>When the current choice depends on the best earlier value and order matters, carry a small summary of the prefix.</div></div>
+
+        <section class="grid">
+            <article class="card"><h2>The picture</h2><div class="array"><span class="cell">7</span><span class="cell keep">1</span><span class="cell">5</span><span class="cell">3</span><span class="cell read">6</span><span class="cell">4</span></div><div class="pointer-row"><span class="pointer">buy so far = 1</span><span class="pointer">sell today = 6</span><span class="pointer">profit = 5</span></div><p>Every price gets one chance to be “today's selling price.”</p></article>
+            <article class="card"><h2>State jobs</h2><ul class="state-list"><li><code>min</code> remembers the cheapest price seen so far.</li><li><code>maxProfit</code> remembers the best valid profit so far.</li><li>Today's candidate is <code>price - min</code>.</li></ul></article>
+        </section>
+
+        <section class="trace" data-trace>
+            <h2>Walk it: [7, 1, 5, 3, 6, 4]</h2>
+            <article class="trace-step"><h3>Day 1: establish the past</h3><div class="array"><span class="cell keep">7</span><span class="cell">1</span><span class="cell">5</span><span class="cell">3</span><span class="cell">6</span><span class="cell">4</span></div><p><code>min = 7</code>, <code>maxProfit = 0</code>. No earlier day exists yet.</p></article>
+            <article class="trace-step"><h3>Day 2: find a cheaper buy</h3><div class="array"><span class="cell done">7</span><span class="cell keep">1</span><span class="cell">5</span><span class="cell">3</span><span class="cell">6</span><span class="cell">4</span></div><p>Selling at 1 is not profitable. Update <code>min</code> from 7 to 1.</p></article>
+            <article class="trace-step"><h3>Day 3: first useful profit</h3><div class="array"><span class="cell done">7</span><span class="cell keep">1</span><span class="cell read">5</span><span class="cell">3</span><span class="cell">6</span><span class="cell">4</span></div><p>Selling at 5 after buying at 1 gives <code>4</code>. Save it as the best.</p></article>
+            <article class="trace-step"><h3>Day 5: improve the answer</h3><div class="array"><span class="cell done">7</span><span class="cell keep">1</span><span class="cell done">5</span><span class="cell done">3</span><span class="cell read">6</span><span class="cell">4</span></div><p><code>6 - 1 = 5</code>. This becomes the final maximum profit.</p></article>
+            <div class="trace-controls"><button data-previous>Previous</button><strong data-counter></strong><button data-next>Next</button></div>
+        </section>
+
+        <section class="grid">
+            <article class="card"><h2>The invariant</h2><p class="invariant">After each day, <code>min</code> is the cheapest price in the scanned prefix, and <code>maxProfit</code> is the best valid buy-before-sell profit inside that prefix.</p><p>Checking every selling day against its cheapest earlier buy covers every best ending.</p></article>
+            <article class="card"><h2>The algorithm</h2><pre><code>let min = prices[0];
+let maxProfit = 0;
+
+for (const price of prices) {
+    maxProfit = Math.max(
+        maxProfit,
+        price - min
+    );
+    min = Math.min(min, price);
+}
+return maxProfit;</code></pre></article>
+        </section>
+
+        <section class="card"><h2>What to remember</h2><p class="warning"><strong>Global min + global max is unsafe.</strong> The maximum price might occur before the minimum, which would mean selling before buying.</p><div class="complexity"><div class="metric"><b>O(n) time</b>Each day is visited once.</div><div class="metric"><b>O(1) space</b>Only two running facts are stored.</div></div><p>Primary source: <a href="https://leetcode.com/problems/best-time-to-buy-and-sell-stock/">LeetCode 121</a>. Pattern reference: <a href="../patterns/running-prefix-state.md">Running prefix state</a>.</p></section>
+        <section class="recall"><h2>Check your memory</h2><details><summary>What question do we ask on every day?</summary><p>“If I sell today, what profit do I make using the cheapest eligible earlier price?”</p></details><details><summary>Why does a decreasing array return zero?</summary><p>No selling price exceeds an earlier buying price, so the best profit never rises above its initial zero.</p></details><p>Ask the agent to trace <code>[3, 8, 2, 5]</code> if the two running states blur together.</p></section>
+        <nav class="lesson-nav"><a href="0003-reverse-string.html">← Reverse String</a><a href="0005-merge-sorted-array.html">Next: Merge Sorted Array →</a></nav>
+    </main>
+</body>
+</html>

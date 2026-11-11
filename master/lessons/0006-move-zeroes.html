@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>06 · Move Zeroes — Visual Lesson</title>
+    <link rel="stylesheet" href="../assets/lesson.css">
+    <script src="../assets/lesson.js" defer></script>
+</head>
+<body>
+    <nav class="topbar"><a href="../course/arrays/06-move-zeroes/prompt.md">← Problem 06</a><span>Arrays · Visual lesson</span><a href="README.md">All lessons</a></nav>
+    <main>
+        <header class="hero"><p class="eyebrow">Pattern · Stable compaction + fill</p><h1>Move Zeroes</h1><p class="lede">First compact every non-zero value into the front. Then the unfinished suffix has only one possible meaning: zeroes.</p></header>
+        <div class="signal"><div class="signal-icon">💡</div><div><strong>Recognition signal</strong><br>When selected values move to one side while the other values keep their order, think: stable compaction, then fill the gap.</div></div>
+
+        <section class="grid">
+            <article class="card"><h2>Two phases</h2><div class="array"><span class="cell zero">0</span><span class="cell read">1</span><span class="cell zero">0</span><span class="cell">3</span><span class="cell">12</span></div><p><strong>Phase 1:</strong> write non-zero values forward.<br><strong>Phase 2:</strong> fill everything after them with zero.</p></article>
+            <article class="card"><h2>State jobs</h2><ul class="state-list"><li><code>i</code> reads all original values.</li><li><code>p1</code> is the next position for a non-zero value.</li><li>After compaction, <code>p1</code> is the start of the zero suffix.</li></ul></article>
+        </section>
+
+        <section class="trace" data-trace>
+            <h2>Walk it: [0, 1, 0, 3, 12]</h2>
+            <article class="trace-step"><h3>Skip the first zero</h3><div class="array"><span class="cell zero">0</span><span class="cell">1</span><span class="cell">0</span><span class="cell">3</span><span class="cell">12</span></div><p><code>p1</code> remains 0 because no non-zero value has been written.</p></article>
+            <article class="trace-step"><h3>Compact 1 into the front</h3><div class="array"><span class="cell write">1</span><span class="cell read">1</span><span class="cell zero">0</span><span class="cell">3</span><span class="cell">12</span></div><p>Write at index 0, then move <code>p1</code> to 1.</p></article>
+            <article class="trace-step"><h3>Compact all non-zero values</h3><div class="array"><span class="cell keep">1</span><span class="cell keep">3</span><span class="cell keep">12</span><span class="cell">3</span><span class="cell">12</span></div><p>The valid prefix is final. Old suffix values are stale and no longer meaningful.</p></article>
+            <article class="trace-step"><h3>Fill the remaining suffix</h3><div class="array"><span class="cell done">1</span><span class="cell done">3</span><span class="cell done">12</span><span class="cell zero">0</span><span class="cell zero">0</span></div><p>Fill from <code>p1 = 3</code> to the end with zeroes.</p></article>
+            <div class="trace-controls"><button data-previous>Previous</button><strong data-counter></strong><button data-next>Next</button></div>
+        </section>
+
+        <section class="grid">
+            <article class="card"><h2>The invariant</h2><p class="invariant">During compaction, <code>nums[0...p1-1]</code> contains exactly the non-zero values seen so far, in their original order.</p><p>After compaction, that prefix is final and every remaining position belongs to the zero suffix.</p></article>
+            <article class="card"><h2>The algorithm</h2><pre><code>let p1 = 0;
+
+for (let i = 0; i &lt; nums.length; i++) {
+    if (nums[i] !== 0) {
+        nums[p1] = nums[i];
+        p1++;
+    }
+}
+
+for (let j = p1; j &lt; nums.length; j++) {
+    nums[j] = 0;
+}</code></pre></article>
+        </section>
+
+        <section class="card"><h2>What to remember</h2><p class="warning"><strong>Two loops are still O(n).</strong> At most <code>n + n</code> operations means <code>2n</code>; Big O drops the constant.</p><div class="complexity"><div class="metric"><b>O(n) time</b>One compact pass and one fill pass.</div><div class="metric"><b>O(1) space</b>No growing result array.</div></div><p>Primary source: <a href="https://leetcode.com/problems/move-zeroes/">LeetCode 283</a>. Pattern reference: <a href="../patterns/read-write-pointers.md">Read/write pointers</a>.</p></section>
+        <section class="recall"><h2>Check your memory</h2><details><summary>What does p1 mean after phase 1?</summary><p>It is both the number of non-zero values and the first position that must become zero.</p></details><details><summary>Why is order preserved?</summary><p>The reader encounters non-zero values left to right, and the writer stores them in exactly that same sequence.</p></details><p>Ask the agent how a swap-based version differs if you want the follow-up optimization.</p></section>
+        <nav class="lesson-nav"><a href="0005-merge-sorted-array.html">← Merge Sorted Array</a><a href="0007-max-consecutive-ones.html">Next: Max Consecutive Ones →</a></nav>
+    </main>
+</body>
+</html>
