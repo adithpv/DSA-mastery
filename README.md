@@ -1,6 +1,6 @@
 # DSA Mastery
 
-I’m learning data structures and algorithms in JavaScript through [LeetCode](https://leetcode.com/) and using Codex as a study partner. I work through examples by hand, write my own solutions, and use Codex for hints, code review, and questions that test whether I can explain my approach.
+I’m learning data structures and algorithms in JavaScript through [LeetCode](https://leetcode.com/) with help from AI. I work through examples by hand, write my own solutions, and use AI for hints, code review, and questions that test whether I can explain my approach.
 
 This repository collects my practice problems, solutions, interactive lessons, and notes on patterns I can reuse. The current course starts with arrays and covers techniques such as read/write pointers, backward merging, and tracking state in a single pass.
 
